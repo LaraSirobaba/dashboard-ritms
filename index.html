@@ -12,7 +12,7 @@
 .brand{display:flex;align-items:center;gap:12px;margin:4px 4px 28px}.brand img{width:72px;height:auto;display:block}.brand span{font-size:20px;font-weight:800}
 .nav{display:block;width:100%;margin:9px 0;padding:14px;border:0;border-radius:11px;color:#fff;background:#ffffff0d;text-align:left;font:inherit;cursor:pointer}.nav.active,.nav:hover{background:#ffffff25}
 .main{margin-left:245px;padding:24px 28px}.header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.header h1{margin:0;color:#470065;font-size:31px}.subtitle{margin-top:5px}.stamp{padding:10px 14px;border-radius:10px;background:#fff;box-shadow:0 3px 13px #0001;font-size:12px}
-.view{display:none}.view.active{display:block}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.filters input,.filters select{min-width:180px;padding:11px 12px;border:1px solid #d4d0d8;border-radius:9px;background:#fff}
+.view{display:none}.view.active{display:block}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.filters input,.filters select{min-width:180px;padding:11px 12px;border:1px solid #d4d0d8;border-radius:9px;background:#fff}.btn-limpar{padding:11px 16px;border:1px solid #68008a;border-radius:9px;background:#fff;color:#5b007d;font-weight:700;cursor:pointer}.btn-limpar:hover{background:#5b007d;color:#fff}.btn-limpar:active{transform:translateY(1px)}
 .cards{display:grid;grid-template-columns:repeat(7,minmax(128px,1fr));gap:13px}.card,.box,.highlight,.indicator{background:#fff;border-radius:14px;box-shadow:0 4px 13px #0001}.card{padding:16px;border-top:4px solid #8200b3}.card.cancelada{border-color:#d44d62}.label{min-height:30px;color:#69616c;font-size:12px}.value{color:#4d006c;font-size:30px;font-weight:800}
 .grid{display:grid;grid-template-columns:39% 61%;gap:18px;margin-top:20px}.box{padding:18px}.box h3{margin:0 0 14px;color:#4d006c}.chart{height:310px}
 .detail{margin-top:20px;display:none}.detail.visible{display:block}.detail-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.detail-count{color:#6b5d70;font-size:13px}
@@ -39,6 +39,7 @@
     <input id="busca" placeholder="Buscar RITM ou descrição">
     <select id="fStatus"><option value="">Status</option></select>
     <select id="fArea"><option value="">Todas as áreas</option></select>
+    <button type="button" class="btn-limpar" id="limparVisao">Limpar filtros</button>
   </div>
   <section class="cards">
     <div class="card"><div class="label">Total de RITMs</div><div class="value" id="total">-</div></div>
@@ -57,7 +58,7 @@
 </section>
 
 <section id="view-ritms" class="view">
-  <div class="filters"><input id="buscaTabela" placeholder="Buscar RITM ou descrição"><select id="fStatusTabela"><option value="">Status</option></select><select id="fAreaTabela"><option value="">Todas as áreas</option></select></div>
+  <div class="filters"><input id="buscaTabela" placeholder="Buscar RITM ou descrição"><select id="fStatusTabela"><option value="">Status</option></select><select id="fAreaTabela"><option value="">Todas as áreas</option></select><button type="button" class="btn-limpar" id="limparRitms">Limpar filtros</button></div>
   <section class="box"><h3>Detalhamento das RITMs</h3><div class="table-wrap"><table><thead><tr><th>RITM</th><th>Classificação</th><th>Área</th><th>Prioridade</th><th>História de Usuário / Descrição</th><th>1º Hom.</th><th>Go-live</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 </section>
 
@@ -104,6 +105,21 @@ function renderExtras(){
   if(indicatorChart)indicatorChart.destroy();
   indicatorChart=new Chart($('indicatorChart'),{type:'bar',data:{labels:ordem,datasets:[{data:ordem.map(c),backgroundColor:ordem.map(s=>cores[s]),borderRadius:5}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})
 }
+function limparFiltrosVisao(){
+  $('busca').value='';
+  $('fStatus').value='';
+  $('fArea').value='';
+  renderVisao();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function limparFiltrosRitms(){
+  $('buscaTabela').value='';
+  $('fStatusTabela').value='';
+  $('fAreaTabela').value='';
+  renderTabela();
+}
+$('limparVisao').addEventListener('click',limparFiltrosVisao);
+$('limparRitms').addEventListener('click',limparFiltrosRitms);
 document.querySelectorAll('.nav[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('view-'+b.dataset.view).classList.add('active')}));
 ['busca','fStatus','fArea'].forEach(id=>$(id).addEventListener('input',()=>{renderVisao();if(id==='fStatus'&&$('fStatus').value)setTimeout(()=>$('detailStatus').scrollIntoView({behavior:'smooth',block:'start'}),100)}));['buscaTabela','fStatusTabela','fAreaTabela'].forEach(id=>$(id).addEventListener('input',renderTabela));iniciar().catch(e=>$('stamp').textContent='Erro: '+e.message);
 </script>
