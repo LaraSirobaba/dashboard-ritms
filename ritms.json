@@ -1,6 +1,6 @@
 {
   "ano": 2026,
-  "atualizadoEm": "2026-11-16T16:15:23-03:00",
+  "atualizadoEm": "2026-11-16T16:20:09-03:00",
   "registros": [
     {
       "ritm": "RITM0945304",
@@ -985,11 +985,11 @@
       "prioridade": 0,
       "statusOriginal": "7 - Aguardando subida",
       "statusAjustado": "Aguardando Go Live",
-      "primeiraHom": "",
-      "goLive": "",
+      "primeiraHom": "2026-11-16T00:00:00",
+      "goLive": "2026-11-16T00:00:00",
       "classificacao": "L&O",
-      "tmaHom": -46339,
-      "tmaTotal": -46335,
+      "tmaHom": 3,
+      "tmaTotal": 7,
       "observacao": ""
     },
     {
