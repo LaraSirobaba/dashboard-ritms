@@ -1,480 +1,82 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard RITMs 2026</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --roxo: #5b007d;
-      --roxo-escuro: #330047;
-      --roxo-medio: #720091;
-      --fundo: #f5f5f8;
-      --texto: #2c2330;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: var(--fundo);
-      color: var(--texto);
-    }
-
-    .sidebar {
-      position: fixed;
-      inset: 0 auto 0 0;
-      width: 245px;
-      padding: 24px 16px;
-      color: #fff;
-      background: linear-gradient(180deg, #4d0067 0%, #2d003f 100%);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 3px 4px 28px;
-    }
-
-    .brand-logo-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 78px;
-      height: 48px;
-      overflow: hidden;
-      border-radius: 5px;
-      background: #4d0067;
-    }
-
-    .brand-logo {
-      display: block;
-      width: 70px;
-      height: auto;
-      filter: grayscale(1) brightness(0) invert(1);
-      mix-blend-mode: screen;
-    }
-
-    .dashboard-name {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .nav {
-      display: block;
-      width: 100%;
-      margin: 9px 0;
-      padding: 14px;
-      border: 0;
-      border-radius: 11px;
-      color: #fff;
-      background: rgba(255,255,255,.06);
-      text-align: left;
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .nav:hover, .nav.active { background: rgba(255,255,255,.18); }
-
-    .main {
-      margin-left: 245px;
-      padding: 24px 28px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-    }
-
-    .header h1 {
-      margin: 0;
-      color: #470065;
-      font-size: 31px;
-    }
-
-    .subtitle { margin-top: 5px; }
-
-    .stamp {
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 3px 13px rgba(0,0,0,.08);
-      font-size: 12px;
-    }
-
-    .view { display: none; }
-    .view.active { display: block; }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .filters input, .filters select {
-      min-width: 180px;
-      padding: 11px 12px;
-      border: 1px solid #d4d0d8;
-      border-radius: 9px;
-      background: #fff;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(128px, 1fr));
-      gap: 13px;
-    }
-
-    .card, .box, .highlight-item, .indicator-item {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 4px 13px rgba(0,0,0,.07);
-    }
-
-    .card {
-      padding: 16px;
-      border-top: 4px solid #8200b3;
-    }
-
-    .card.cancelada { border-color: #d44d62; }
-    .card .label { min-height: 30px; color: #69616c; font-size: 12px; }
-    .card .value { color: #4d006c; font-size: 30px; font-weight: 800; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 39% 61%;
-      gap: 18px;
-      margin-top: 20px;
-    }
-
-    .box { padding: 18px; }
-    .box h3 { margin: 0 0 14px; color: #4d006c; }
-    .chart-wrap { height: 310px; }
-
-    .table-box {
-      max-height: 570px;
-      margin-top: 18px;
-      overflow: auto;
-    }
-
-    table {
-      width: 100%;
-      min-width: 1050px;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    th {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      padding: 9px;
-      color: #fff;
-      background: var(--roxo);
-      text-align: left;
-    }
-
-    td { padding: 7px 9px; border-bottom: 1px solid #d7d2d9; vertical-align: top; }
-    tbody tr:nth-child(even) { background: #f4f2f5; }
-
-    .pill { display: inline-block; padding: 4px 8px; border-radius: 12px; font-weight: 700; white-space: nowrap; }
-    .status-backlog { color: #6b5100; background: #fff0b8; }
-    .status-desenvolvimento { color: #185b9d; background: #dcecff; }
-    .status-homologacao { color: #6222a2; background: #eadcff; }
-    .status-go-live { color: #9b2750; background: #ffe1eb; }
-    .status-producao { color: #17643a; background: #dcefe3; }
-    .status-cancelada { color: #a02c3d; background: #f5dfe2; }
-    .status-outro { color: #565660; background: #e8e8ec; }
-
-    .highlight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
-    .highlight-item { padding: 18px; border-left: 5px solid #8200b3; }
-    .highlight-item strong { display: block; margin-top: 8px; color: #4d006c; font-size: 28px; }
-
-    .indicator-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 22px; }
-    .indicator-item { padding: 20px; }
-    .indicator-item .big { margin-top: 8px; color: #4d006c; font-size: 29px; font-weight: 800; }
-
-    @media (max-width: 1200px) {
-      .cards { grid-template-columns: repeat(4, 1fr); }
-      .grid { grid-template-columns: 1fr; }
-      .indicator-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    @media (max-width: 760px) {
-      .sidebar { width: 74px; padding: 18px 8px; }
-      .brand { justify-content: center; margin-bottom: 25px; }
-      .brand-logo-box { width: 54px; height: 38px; }
-      .brand-logo { width: 50px; }
-      .dashboard-name { display: none; }
-      .nav { overflow: hidden; text-align: center; font-size: 0; }
-      .nav::first-letter { font-size: 20px; }
-      .main { margin-left: 74px; padding: 17px; }
-      .header { display: block; }
-      .stamp { margin-top: 10px; }
-      .cards { grid-template-columns: repeat(2, 1fr); }
-      .highlight-grid, .indicator-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard RITMs 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--roxo:#5b007d;--roxo2:#8000a8;--fundo:#f5f5f8;--texto:#302533}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--fundo);color:var(--texto)}
+.sidebar{position:fixed;inset:0 auto 0 0;width:245px;padding:24px 16px;background:linear-gradient(180deg,#4d0067,#2d003f);color:#fff}
+.brand{display:flex;align-items:center;gap:12px;margin:4px 4px 28px}.brand img{width:72px;height:auto;display:block}.brand span{font-size:20px;font-weight:800}
+.nav{display:block;width:100%;margin:9px 0;padding:14px;border:0;border-radius:11px;color:#fff;background:#ffffff0d;text-align:left;font:inherit;cursor:pointer}.nav.active,.nav:hover{background:#ffffff25}
+.main{margin-left:245px;padding:24px 28px}.header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.header h1{margin:0;color:#470065;font-size:31px}.subtitle{margin-top:5px}.stamp{padding:10px 14px;border-radius:10px;background:#fff;box-shadow:0 3px 13px #0001;font-size:12px}
+.view{display:none}.view.active{display:block}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.filters input,.filters select{min-width:180px;padding:11px 12px;border:1px solid #d4d0d8;border-radius:9px;background:#fff}
+.cards{display:grid;grid-template-columns:repeat(7,minmax(128px,1fr));gap:13px}.card,.box,.highlight,.indicator{background:#fff;border-radius:14px;box-shadow:0 4px 13px #0001}.card{padding:16px;border-top:4px solid #8200b3}.card.cancelada{border-color:#d44d62}.label{min-height:30px;color:#69616c;font-size:12px}.value{color:#4d006c;font-size:30px;font-weight:800}
+.grid{display:grid;grid-template-columns:39% 61%;gap:18px;margin-top:20px}.box{padding:18px}.box h3{margin:0 0 14px;color:#4d006c}.chart{height:310px}
+.detail{margin-top:20px;display:none}.detail.visible{display:block}.detail-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.detail-count{color:#6b5d70;font-size:13px}
+.table-wrap{max-height:520px;overflow:auto;border-radius:10px}table{width:100%;min-width:900px;border-collapse:collapse;font-size:12px}th{position:sticky;top:0;z-index:2;padding:10px;color:#fff;background:#620080;text-align:left}td{padding:8px 10px;border-bottom:1px solid #e2dce5;vertical-align:top}tbody tr:nth-child(even){background:#f6f3f7}
+.pill{display:inline-block;padding:4px 9px;border-radius:12px;font-weight:700;white-space:nowrap}.Backlog{background:#fff0b8;color:#6b5100}.Desenvolvimento{background:#dcecff;color:#185b9d}.Homologação{background:#eadcff;color:#6222a2}.Aguardando-Go-Live{background:#ffe1eb;color:#9b2750}.Produção{background:#dcefe3;color:#17643a}.Cancelada{background:#f5dfe2;color:#a02c3d}.Não-Classificado{background:#e8e8ec;color:#565660}
+.highlight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}.highlight{padding:18px;border-left:5px solid #8200b3}.highlight strong{display:block;margin-top:8px;color:#4d006c;font-size:28px}.indicator-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:22px}.indicator{padding:20px}.indicator .big{margin-top:8px;color:#4d006c;font-size:29px;font-weight:800}
+@media(max-width:1200px){.cards{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:1fr}.indicator-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.sidebar{width:74px;padding:18px 8px}.brand{justify-content:center}.brand img{width:52px}.brand span{display:none}.nav{font-size:0;text-align:center}.nav:first-letter{font-size:20px}.main{margin-left:74px;padding:17px}.header{display:block}.stamp{margin-top:10px}.cards{grid-template-columns:repeat(2,1fr)}.highlight-grid,.indicator-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-logo-box">
-        <img src="./vivo-logo.png" alt="Vivo" class="brand-logo">
-      </div>
-      <span class="dashboard-name">Dashboard</span>
-    </div>
+<aside class="sidebar">
+  <div class="brand"><img src="./vivo-logo-branco.png" alt="Vivo" onerror="this.style.display='none';document.getElementById('logoFallback').style.display='inline'"><b id="logoFallback" style="display:none">vivo✣</b><span>Dashboard</span></div>
+  <button class="nav active" data-view="visao">📊 Visão Geral</button>
+  <button class="nav" data-view="ritms">📋 RITMs</button>
+  <button class="nav" data-view="highlights">💡 Highlights</button>
+  <button class="nav" data-view="indicadores">📈 Indicadores</button>
+</aside>
+<main class="main">
+<header class="header"><div><h1>Status das Entregas</h1><div class="subtitle">Dashboard executivo • RITMs abertas em <b id="ano">2026</b></div></div><div class="stamp" id="stamp">Carregando...</div></header>
 
-    <button class="nav active" data-view="visao">📊 Visão Geral</button>
-    <button class="nav" data-view="ritms">📋 RITMs</button>
-    <button class="nav" data-view="highlights">💡 Highlights</button>
-    <button class="nav" data-view="indicadores">📈 Indicadores</button>
-  </aside>
+<section id="view-visao" class="view active">
+  <div class="filters">
+    <input id="busca" placeholder="Buscar RITM ou descrição">
+    <select id="fStatus"><option value="">Status</option></select>
+    <select id="fArea"><option value="">Todas as áreas</option></select>
+  </div>
+  <section class="cards">
+    <div class="card"><div class="label">Total de RITMs</div><div class="value" id="total">-</div></div>
+    <div class="card"><div class="label">Backlog</div><div class="value" id="backlog">-</div></div>
+    <div class="card"><div class="label">Desenvolvimento</div><div class="value" id="desenvolvimento">-</div></div>
+    <div class="card"><div class="label">Homologação</div><div class="value" id="homologacao">-</div></div>
+    <div class="card"><div class="label">Aguardando Go Live</div><div class="value" id="goLive">-</div></div>
+    <div class="card"><div class="label">Produção</div><div class="value" id="producao">-</div></div>
+    <div class="card cancelada"><div class="label">Canceladas</div><div class="value" id="cancelada">-</div></div>
+  </section>
+  <section class="grid"><div class="box"><h3>Status RITMs 2026</h3><div class="chart"><canvas id="statusChart"></canvas></div></div><div class="box"><h3>Áreas atendidas</h3><div class="chart"><canvas id="areaChart"></canvas></div></div></section>
+  <section id="detailStatus" class="box detail">
+    <div class="detail-title"><h3 id="detailHeading">Detalhamento das RITMs</h3><div class="detail-count" id="detailCount"></div></div>
+    <div class="table-wrap"><table><thead><tr><th>RITM</th><th>Classificação</th><th>Área</th><th>Prioridade</th><th>História de Usuário / Descrição</th><th>Status</th></tr></thead><tbody id="detailBody"></tbody></table></div>
+  </section>
+</section>
 
-  <main class="main">
-    <header class="header">
-      <div>
-        <h1>Status das Entregas</h1>
-        <div class="subtitle">Dashboard executivo • RITMs abertas em <b id="ano">2026</b></div>
-      </div>
-      <div class="stamp" id="stamp">Carregando dados...</div>
-    </header>
+<section id="view-ritms" class="view">
+  <div class="filters"><input id="buscaTabela" placeholder="Buscar RITM ou descrição"><select id="fStatusTabela"><option value="">Status</option></select><select id="fAreaTabela"><option value="">Todas as áreas</option></select></div>
+  <section class="box"><h3>Detalhamento das RITMs</h3><div class="table-wrap"><table><thead><tr><th>RITM</th><th>Classificação</th><th>Área</th><th>Prioridade</th><th>História de Usuário / Descrição</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
+</section>
 
-    <section id="view-visao" class="view active">
-      <div class="filters">
-        <input id="busca" placeholder="Buscar RITM ou descrição">
-        <select id="fStatus"><option value="">Todos os status ajustados</option></select>
-        <select id="fArea"><option value="">Todas as áreas</option></select>
-      </div>
-
-      <section class="cards">
-        <div class="card"><div class="label">Total de RITMs</div><div class="value" id="total">-</div></div>
-        <div class="card"><div class="label">Backlog</div><div class="value" id="backlog">-</div></div>
-        <div class="card"><div class="label">Desenvolvimento</div><div class="value" id="desenvolvimento">-</div></div>
-        <div class="card"><div class="label">Homologação</div><div class="value" id="homologacao">-</div></div>
-        <div class="card"><div class="label">Aguardando Go Live</div><div class="value" id="goLive">-</div></div>
-        <div class="card"><div class="label">Produção</div><div class="value" id="producao">-</div></div>
-        <div class="card cancelada"><div class="label">Canceladas</div><div class="value" id="cancelada">-</div></div>
-      </section>
-
-      <section class="grid">
-        <div class="box"><h3>Status RITMs 2026</h3><div class="chart-wrap"><canvas id="statusChart"></canvas></div></div>
-        <div class="box"><h3>Áreas atendidas</h3><div class="chart-wrap"><canvas id="areaChart"></canvas></div></div>
-      </section>
-    </section>
-
-    <section id="view-ritms" class="view">
-      <div class="filters">
-        <input id="buscaTabela" placeholder="Buscar RITM ou descrição">
-        <select id="fStatusTabela"><option value="">Todos os status ajustados</option></select>
-        <select id="fAreaTabela"><option value="">Todas as áreas</option></select>
-      </div>
-      <section class="box table-box">
-        <h3>Detalhamento das RITMs</h3>
-        <table>
-          <thead><tr><th>RITM</th><th>Classificação</th><th>Área</th><th>Prioridade</th><th>História de Usuário / Descrição</th><th>Status original</th><th>Status ajustado</th></tr></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </section>
-    </section>
-
-    <section id="view-highlights" class="view">
-      <div class="highlight-grid">
-        <div class="highlight-item">RITMs em Backlog<strong id="hBacklog">-</strong></div>
-        <div class="highlight-item">RITMs em Homologação<strong id="hHomologacao">-</strong></div>
-        <div class="highlight-item">Aguardando Go Live<strong id="hGoLive">-</strong></div>
-        <div class="highlight-item">RITMs canceladas<strong id="hCancelada">-</strong></div>
-        <div class="highlight-item">Área com mais demandas<strong id="hArea">-</strong></div>
-        <div class="highlight-item">Prioridades preenchidas<strong id="hPrioridade">-</strong></div>
-      </div>
-    </section>
-
-    <section id="view-indicadores" class="view">
-      <div class="indicator-grid">
-        <div class="indicator-item">TMA Homologação<div class="big" id="iTmaHom">-</div></div>
-        <div class="indicator-item">Tempo Médio Go Live<div class="big" id="iTmaGoLive">-</div></div>
-        <div class="indicator-item">Percentual em Produção<div class="big" id="iProducao">-</div></div>
-        <div class="indicator-item">Percentual em Backlog<div class="big" id="iBacklog">-</div></div>
-        <div class="indicator-item">Total de Áreas<div class="big" id="iAreas">-</div></div>
-      </div>
-      <section class="box" style="margin-top:18px">
-        <h3>Indicadores por status</h3>
-        <div class="chart-wrap"><canvas id="indicatorChart"></canvas></div>
-      </section>
-    </section>
-  </main>
-
-  <script>
-    let base = [];
-    let chartStatus;
-    let chartArea;
-    let indicatorChart;
-
-    const $ = id => document.getElementById(id);
-    const ordem = ["Produção", "Backlog", "Cancelada", "Homologação", "Aguardando Go Live", "Desenvolvimento", "Não Classificado"];
-    const cores = {
-      "Produção": "#5a2a83",
-      "Backlog": "#8c1d8d",
-      "Cancelada": "#bf3f56",
-      "Homologação": "#7926ac",
-      "Aguardando Go Live": "#c44576",
-      "Desenvolvimento": "#4667b1",
-      "Não Classificado": "#8c8c96"
-    };
-
-    function classeStatus(status) {
-      const mapa = {
-        "Backlog": "status-backlog",
-        "Desenvolvimento": "status-desenvolvimento",
-        "Homologação": "status-homologacao",
-        "Aguardando Go Live": "status-go-live",
-        "Produção": "status-producao",
-        "Cancelada": "status-cancelada"
-      };
-      return mapa[status] || "status-outro";
-    }
-
-    async function iniciar() {
-      const resposta = await fetch("./ritms.json?v=" + Date.now());
-      if (!resposta.ok) throw new Error("Não foi possível carregar ritms.json");
-      const dados = await resposta.json();
-      base = dados.registros || [];
-      $("ano").textContent = dados.ano || 2026;
-      $("stamp").textContent = "Dados gerados em " + new Date(dados.atualizadoEm).toLocaleString("pt-BR");
-
-      const status = [...new Set(base.map(item => item.statusAjustado).filter(Boolean))].sort();
-      const areas = [...new Set(base.map(item => item.area).filter(Boolean))].sort();
-
-      status.forEach(valor => {
-        $("fStatus").add(new Option(valor, valor));
-        $("fStatusTabela").add(new Option(valor, valor));
-      });
-      areas.forEach(valor => {
-        $("fArea").add(new Option(valor, valor));
-        $("fAreaTabela").add(new Option(valor, valor));
-      });
-
-      renderVisao();
-      renderTabela();
-      renderExtras();
-    }
-
-    function filtrar(buscaId, statusId, areaId) {
-      const busca = $(buscaId).value.toLowerCase();
-      const status = $(statusId).value;
-      const area = $(areaId).value;
-      return base.filter(item => {
-        const texto = `${item.ritm || ""} ${item.descricao || ""}`.toLowerCase();
-        return (!busca || texto.includes(busca)) && (!status || item.statusAjustado === status) && (!area || item.area === area);
-      });
-    }
-
-    const contar = (dados, status) => dados.filter(item => item.statusAjustado === status).length;
-
-    function renderVisao() {
-      const dados = filtrar("busca", "fStatus", "fArea");
-      $("total").textContent = dados.length;
-      $("backlog").textContent = contar(dados, "Backlog");
-      $("desenvolvimento").textContent = contar(dados, "Desenvolvimento");
-      $("homologacao").textContent = contar(dados, "Homologação");
-      $("goLive").textContent = contar(dados, "Aguardando Go Live");
-      $("producao").textContent = contar(dados, "Produção");
-      $("cancelada").textContent = contar(dados, "Cancelada");
-      renderGraficos(dados);
-    }
-
-    function renderTabela() {
-      const dados = filtrar("buscaTabela", "fStatusTabela", "fAreaTabela");
-      $("tbody").innerHTML = dados.map(item => `
-        <tr>
-          <td><b>${item.ritm || ""}</b></td>
-          <td>${item.classificacao || ""}</td>
-          <td>${item.area || ""}</td>
-          <td>${item.prioridade ?? ""}</td>
-          <td>${item.descricao || ""}</td>
-          <td>${item.statusOriginal || ""}</td>
-          <td><span class="pill ${classeStatus(item.statusAjustado)}">${item.statusAjustado || ""}</span></td>
-        </tr>`).join("");
-    }
-
-    function renderGraficos(dados) {
-      const quantidades = ordem.map(status => contar(dados, status));
-      if (chartStatus) chartStatus.destroy();
-      chartStatus = new Chart($("statusChart"), {
-        type: "bar",
-        data: { labels: ordem, datasets: [{ data: quantidades, backgroundColor: ordem.map(status => cores[status]), borderRadius: 4, barThickness: 19 }] },
-        options: { indexAxis: "y", maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } }
-      });
-
-      const porArea = {};
-      dados.forEach(item => porArea[item.area] = (porArea[item.area] || 0) + 1);
-      const principais = Object.entries(porArea).sort((a,b) => b[1] - a[1]).slice(0,10);
-      if (chartArea) chartArea.destroy();
-      chartArea = new Chart($("areaChart"), {
-        type: "bar",
-        data: { labels: principais.map(item => item[0]), datasets: [{ data: principais.map(item => item[1]), backgroundColor: "#720091", borderRadius: 5 }] },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } }
-      });
-    }
-
-    function mediaValida(campo, aceitaZero = false) {
-      const valores = base.map(item => item[campo]).filter(valor => Number.isFinite(valor) && (aceitaZero ? valor >= 0 : valor > 0) && valor <= 1000);
-      return valores.length ? valores.reduce((total, valor) => total + valor, 0) / valores.length : 0;
-    }
-
-    function renderExtras() {
-      const total = base.length || 1;
-      const areas = {};
-      base.forEach(item => areas[item.area] = (areas[item.area] || 0) + 1);
-      const principal = Object.entries(areas).sort((a,b) => b[1] - a[1])[0] || ["-", 0];
-
-      $("hBacklog").textContent = contar(base, "Backlog");
-      $("hHomologacao").textContent = contar(base, "Homologação");
-      $("hGoLive").textContent = contar(base, "Aguardando Go Live");
-      $("hCancelada").textContent = contar(base, "Cancelada");
-      $("hArea").textContent = `${principal[0]} (${principal[1]})`;
-      $("hPrioridade").textContent = base.filter(item => item.prioridade !== "" && item.prioridade != null).length;
-
-      $("iTmaHom").textContent = mediaValida("tmaHom", true).toFixed(1) + " dias";
-      $("iTmaGoLive").textContent = mediaValida("tmaTotal", false).toFixed(1) + " dias";
-      $("iProducao").textContent = (contar(base, "Produção") / total * 100).toFixed(1) + "%";
-      $("iBacklog").textContent = (contar(base, "Backlog") / total * 100).toFixed(1) + "%";
-      $("iAreas").textContent = Object.keys(areas).length;
-
-      if (indicatorChart) indicatorChart.destroy();
-      indicatorChart = new Chart($("indicatorChart"), {
-        type: "bar",
-        data: { labels: ordem, datasets: [{ data: ordem.map(status => contar(base, status)), backgroundColor: ordem.map(status => cores[status]), borderRadius: 5 }] },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-      });
-    }
-
-    document.querySelectorAll(".nav[data-view]").forEach(botao => {
-      botao.addEventListener("click", () => {
-        document.querySelectorAll(".nav").forEach(item => item.classList.remove("active"));
-        document.querySelectorAll(".view").forEach(item => item.classList.remove("active"));
-        botao.classList.add("active");
-        $("view-" + botao.dataset.view).classList.add("active");
-        if (botao.dataset.view === "ritms") renderTabela();
-        if (["highlights", "indicadores"].includes(botao.dataset.view)) renderExtras();
-      });
-    });
-
-    ["busca", "fStatus", "fArea"].forEach(id => $(id).addEventListener("input", renderVisao));
-    ["buscaTabela", "fStatusTabela", "fAreaTabela"].forEach(id => $(id).addEventListener("input", renderTabela));
-
-    iniciar().catch(erro => {
-      $("stamp").textContent = "Erro: " + erro.message;
-      console.error(erro);
-    });
-  </script>
-</body>
-</html>
+<section id="view-highlights" class="view"><div class="highlight-grid"><div class="highlight">RITMs em Backlog<strong id="hBacklog">-</strong></div><div class="highlight">RITMs em Homologação<strong id="hHomologacao">-</strong></div><div class="highlight">Aguardando Go Live<strong id="hGoLive">-</strong></div><div class="highlight">RITMs canceladas<strong id="hCancelada">-</strong></div><div class="highlight">Área com mais demandas<strong id="hArea">-</strong></div><div class="highlight">Prioridades preenchidas<strong id="hPrioridade">-</strong></div></div></section>
+<section id="view-indicadores" class="view"><div class="indicator-grid"><div class="indicator">TMA Homologação<div class="big" id="iTmaHom">-</div></div><div class="indicator">Tempo Médio Go Live<div class="big" id="iTmaGoLive">-</div></div><div class="indicator">Percentual em Produção<div class="big" id="iProducao">-</div></div><div class="indicator">Percentual em Backlog<div class="big" id="iBacklog">-</div></div><div class="indicator">Total de Áreas<div class="big" id="iAreas">-</div></div></div><section class="box" style="margin-top:18px"><h3>Indicadores por status</h3><div class="chart"><canvas id="indicatorChart"></canvas></div></section></section>
+</main>
+<script>
+let base=[],chartStatus,chartArea,indicatorChart;const $=id=>document.getElementById(id);const ordem=['Produção','Backlog','Cancelada','Homologação','Aguardando Go Live','Desenvolvimento','Não Classificado'];const cores={'Produção':'#5a2a83','Backlog':'#8c1d8d','Cancelada':'#bf3f56','Homologação':'#7926ac','Aguardando Go Live':'#c44576','Desenvolvimento':'#4667b1','Não Classificado':'#8c8c96'};
+async function iniciar(){const r=await fetch('./ritms.json?v='+Date.now());if(!r.ok)throw Error('Não foi possível carregar ritms.json');const d=await r.json();base=d.registros||[];$('ano').textContent=d.ano||2026;$('stamp').textContent='Dados gerados em '+new Date(d.atualizadoEm).toLocaleString('pt-BR');const sts=[...new Set(base.map(x=>x.statusAjustado).filter(Boolean))].sort();const ars=[...new Set(base.map(x=>x.area).filter(Boolean))].sort();sts.forEach(v=>{$('fStatus').add(new Option(v,v));$('fStatusTabela').add(new Option(v,v))});ars.forEach(v=>{$('fArea').add(new Option(v,v));$('fAreaTabela').add(new Option(v,v))});renderVisao();renderTabela();renderExtras()}
+function filtrar(bid,sid,aid){const b=$(bid).value.toLowerCase(),s=$(sid).value,a=$(aid).value;return base.filter(x=>(!b||(`${x.ritm||''} ${x.descricao||''}`).toLowerCase().includes(b))&&(!s||x.statusAjustado===s)&&(!a||x.area===a))}
+const contar=(a,s)=>a.filter(x=>x.statusAjustado===s).length;
+function linha(x){return `<tr><td><b>${x.ritm||''}</b></td><td>${x.classificacao||''}</td><td>${x.area||''}</td><td>${x.prioridade??''}</td><td>${x.descricao||''}</td><td><span class="pill ${(x.statusAjustado||'Não Classificado').replaceAll(' ','-')}">${x.statusAjustado||'Não Classificado'}</span></td></tr>`}
+function renderVisao(){const a=filtrar('busca','fStatus','fArea');$('total').textContent=a.length;$('backlog').textContent=contar(a,'Backlog');$('desenvolvimento').textContent=contar(a,'Desenvolvimento');$('homologacao').textContent=contar(a,'Homologação');$('goLive').textContent=contar(a,'Aguardando Go Live');$('producao').textContent=contar(a,'Produção');$('cancelada').textContent=contar(a,'Cancelada');graficos(a);renderDetalheStatus(a)}
+function renderDetalheStatus(a){const status=$('fStatus').value,temFiltro=status||$('busca').value||$('fArea').value;$('detailStatus').classList.toggle('visible',!!temFiltro);if(!temFiltro)return;$('detailHeading').textContent=status?`Detalhamento das RITMs - ${status}`:'Detalhamento das RITMs';$('detailCount').textContent=`${a.length} registro(s)`;$('detailBody').innerHTML=a.length?a.map(linha).join(''):'<tr><td colspan="6">Nenhuma RITM encontrada.</td></tr>'}
+function renderTabela(){const a=filtrar('buscaTabela','fStatusTabela','fAreaTabela');$('tbody').innerHTML=a.map(linha).join('')}
+function graficos(a){const vals=ordem.map(s=>contar(a,s));if(chartStatus)chartStatus.destroy();chartStatus=new Chart($('statusChart'),{type:'bar',data:{labels:ordem,datasets:[{data:vals,backgroundColor:ordem.map(s=>cores[s]),borderRadius:4,barThickness:19}]},options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{display:false}},y:{grid:{display:false}}}}});const ac={};a.forEach(x=>ac[x.area]=(ac[x.area]||0)+1);const top=Object.entries(ac).sort((x,y)=>y[1]-x[1]).slice(0,10);if(chartArea)chartArea.destroy();chartArea=new Chart($('areaChart'),{type:'bar',data:{labels:top.map(x=>x[0]),datasets:[{data:top.map(x=>x[1]),backgroundColor:'#720091',borderRadius:5}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true},x:{grid:{display:false}}}}})}
+function media(c,z=false){const v=base.map(x=>x[c]).filter(n=>Number.isFinite(n)&&(z?n>=0:n>0)&&n<=1000);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0}
+function renderExtras(){const total=base.length||1,c=s=>contar(base,s),areas={};base.forEach(x=>areas[x.area]=(areas[x.area]||0)+1);const top=Object.entries(areas).sort((a,b)=>b[1]-a[1])[0]||['-',0];$('hBacklog').textContent=c('Backlog');$('hHomologacao').textContent=c('Homologação');$('hGoLive').textContent=c('Aguardando Go Live');$('hCancelada').textContent=c('Cancelada');$('hArea').textContent=`${top[0]} (${top[1]})`;$('hPrioridade').textContent=base.filter(x=>x.prioridade!==''&&x.prioridade!=null).length;$('iTmaHom').textContent=media('tmaHom',true).toFixed(1)+' dias';$('iTmaGoLive').textContent=media('tmaTotal').toFixed(1)+' dias';$('iProducao').textContent=(c('Produção')/total*100).toFixed(1)+'%';$('iBacklog').textContent=(c('Backlog')/total*100).toFixed(1)+'%';$('iAreas').textContent=Object.keys(areas).length;if(indicatorChart)indicatorChart.destroy();indicatorChart=new Chart($('indicatorChart'),{type:'bar',data:{labels:ordem,datasets:[{data:ordem.map(c),backgroundColor:ordem.map(s=>cores[s]),borderRadius:5}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})}
+document.querySelectorAll('.nav[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('view-'+b.dataset.view).classList.add('active')}));
+['busca','fStatus','fArea'].forEach(id=>$(id).addEventListener('input',()=>{renderVisao();if(id==='fStatus'&&$('fStatus').value)setTimeout(()=>$('detailStatus').scrollIntoView({behavior:'smooth',block:'start'}),100)}));['buscaTabela','fStatusTabela','fAreaTabela'].forEach(id=>$(id).addEventListener('input',renderTabela));iniciar().catch(e=>$('stamp').textContent='Erro: '+e.message);
+</script>
+</body></html>
