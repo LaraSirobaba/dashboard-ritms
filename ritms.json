@@ -1,6 +1,6 @@
 {
   "ano": 2026,
-  "atualizadoEm": "2026-11-16T16:03:33-03:00",
+  "atualizadoEm": "2026-11-16T16:15:23-03:00",
   "registros": [
     {
       "ritm": "RITM0945304",
@@ -620,7 +620,7 @@
     {
       "ritm": "RITM0921766",
       "abertura": "2026-07-16T00:00:00",
-      "area": "Beneficios",
+      "area": "Benefícios",
       "descricao": "Job SAP durante o dia",
       "prioridade": 15,
       "statusOriginal": "2 - Aguardando Aprovação",
@@ -740,7 +740,7 @@
     {
       "ritm": "RITM0982902",
       "abertura": "2026-09-14T00:00:00",
-      "area": "Beneficios",
+      "area": "Benefícios",
       "descricao": "Contrato de trabalho - Clausula trabalho",
       "prioridade": 2,
       "statusOriginal": "2 - Aguardando Aprovação",
@@ -800,7 +800,7 @@
     {
       "ritm": "RITM0973980",
       "abertura": "2026-04-24T00:00:00",
-      "area": "Beneficios",
+      "area": "Benefícios",
       "descricao": "Novos campos de hierarquia na Importação Bematize (integração entre SAP e 838 Soluções - VIBE)",
       "prioridade": 17,
       "statusOriginal": "2 - Aguardando Aprovação",
