@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard RITMs 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{--roxo:#5b007d;--roxo2:#8000a8;--fundo:#f5f5f8;--texto:#302533}
 *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--fundo);color:var(--texto)}
@@ -12,7 +13,7 @@
 .brand{display:flex;align-items:center;gap:12px;margin:4px 4px 28px}.brand img{width:72px;height:auto;display:block}.brand span{font-size:20px;font-weight:800}
 .nav{display:block;width:100%;margin:9px 0;padding:14px;border:0;border-radius:11px;color:#fff;background:#ffffff0d;text-align:left;font:inherit;cursor:pointer}.nav.active,.nav:hover{background:#ffffff25}
 .main{margin-left:245px;padding:24px 28px}.header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.header h1{margin:0;color:#470065;font-size:31px}.subtitle{margin-top:5px}.stamp{padding:10px 14px;border-radius:10px;background:#fff;box-shadow:0 3px 13px #0001;font-size:12px}
-.view{display:none}.view.active{display:block}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.filters input,.filters select{min-width:180px;padding:11px 12px;border:1px solid #d4d0d8;border-radius:9px;background:#fff}.btn-limpar{padding:11px 16px;border:1px solid #68008a;border-radius:9px;background:#fff;color:#5b007d;font-weight:700;cursor:pointer}.btn-limpar:hover{background:#5b007d;color:#fff}.btn-limpar:active{transform:translateY(1px)}
+.view{display:none}.view.active{display:block}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.filters input,.filters select{min-width:180px;padding:11px 12px;border:1px solid #d4d0d8;border-radius:9px;background:#fff}.btn-limpar{padding:11px 16px;border:1px solid #68008a;border-radius:9px;background:#fff;color:#5b007d;font-weight:700;cursor:pointer}.btn-limpar:hover{background:#5b007d;color:#fff}.btn-limpar:active{transform:translateY(1px)}.btn-exportar{padding:11px 16px;border:1px solid #217346;border-radius:9px;background:#217346;color:#fff;font-weight:700;cursor:pointer}.btn-exportar:hover{background:#185c37}.btn-exportar:active{transform:translateY(1px)}
 .cards{display:grid;grid-template-columns:repeat(7,minmax(128px,1fr));gap:13px}.card,.box,.highlight,.indicator{background:#fff;border-radius:14px;box-shadow:0 4px 13px #0001}.card{padding:16px;border-top:4px solid #8200b3}.card.cancelada{border-color:#d44d62}.label{min-height:30px;color:#69616c;font-size:12px}.value{color:#4d006c;font-size:30px;font-weight:800}
 .grid{display:grid;grid-template-columns:39% 61%;gap:18px;margin-top:20px}.box{padding:18px}.box h3{margin:0 0 14px;color:#4d006c}.chart{height:310px}
 .detail{margin-top:20px;display:none}.detail.visible{display:block}.detail-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.detail-count{color:#6b5d70;font-size:13px}
@@ -58,7 +59,7 @@
 </section>
 
 <section id="view-ritms" class="view">
-  <div class="filters"><input id="buscaTabela" placeholder="Buscar RITM ou descrição"><select id="fStatusTabela"><option value="">Status</option></select><select id="fAreaTabela"><option value="">Todas as áreas</option></select><button type="button" class="btn-limpar" id="limparRitms">Limpar filtros</button></div>
+  <div class="filters"><input id="buscaTabela" placeholder="Buscar RITM ou descrição"><select id="fStatusTabela"><option value="">Status</option></select><select id="fAreaTabela"><option value="">Todas as áreas</option></select><button type="button" class="btn-limpar" id="limparRitms">Limpar filtros</button><button type="button" class="btn-exportar" id="exportarRitms">Exportar Excel</button></div>
   <section class="box"><h3>Detalhamento das RITMs</h3><div class="table-wrap"><table><thead><tr><th>RITM</th><th>Classificação</th><th>Área</th><th>Prioridade</th><th>História de Usuário / Descrição</th><th>1º Hom.</th><th>Go-live</th><th>Status</th></tr></thead><tbody id="tbody"></tbody></table></div></section>
 </section>
 
@@ -108,6 +109,28 @@ function renderExtras(){
   if(indicatorChart)indicatorChart.destroy();
   indicatorChart=new Chart($('indicatorChart'),{type:'bar',data:{labels:ordem,datasets:[{data:ordem.map(c),backgroundColor:ordem.map(s=>cores[s]),borderRadius:5}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})
 }
+function exportarRitmsExcel(){
+  const dados=filtrar('buscaTabela','fStatusTabela','fAreaTabela');
+  if(!dados.length){alert('Não há RITMs para exportar com os filtros atuais.');return;}
+  if(typeof XLSX==='undefined'){alert('Não foi possível carregar o recurso de exportação. Verifique a conexão e tente novamente.');return;}
+  const linhas=dados.map(x=>({
+    'RITM':x.ritm||'',
+    'Classificação':x.classificacao||'',
+    'Área':x.area||'',
+    'Prioridade':x.prioridade??'',
+    'História de Usuário / Descrição':x.descricao||'',
+    '1º Hom.':formatarData(x.primeiraHom),
+    'Go-live':formatarData(x.goLive),
+    'Status':x.statusAjustado||'Não Classificado'
+  }));
+  const planilha=XLSX.utils.json_to_sheet(linhas);
+  planilha['!cols']=[{wch:16},{wch:24},{wch:20},{wch:12},{wch:70},{wch:13},{wch:13},{wch:24}];
+  const pasta=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(pasta,planilha,'RITMs');
+  const hoje=new Date().toLocaleDateString('pt-BR').split('/').reverse().join('-');
+  XLSX.writeFile(pasta,`detalhamento-ritms-${hoje}.xlsx`);
+}
+$('exportarRitms').addEventListener('click',exportarRitmsExcel);
 function limparFiltrosVisao(){
   $('busca').value='';
   $('fStatus').value='';
