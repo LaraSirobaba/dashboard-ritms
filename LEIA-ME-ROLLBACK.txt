@@ -1,0 +1,13 @@
+ROLLBACK URGENTE DO DASHBOARD
+
+Este pacote preserva o ritms.json atual.
+O index.html correto precisa ser recuperado pelo GitHub no commit imediatamente anterior ao upload que alterou o layout.
+
+Passos:
+1. No repositorio dashboard-ritms, abra Commits.
+2. Abra o commit imediatamente anterior ao upload de dashboard-ritms-motivo-backlog-descricao.zip.
+3. Abra index.html e clique em Download raw file.
+4. Volte para a branch main e use Add file > Upload files.
+5. Envie somente o index.html recuperado.
+6. Nao substitua o ritms.json se quiser manter os dados atuais.
+7. Atualize a pagina com Ctrl + Shift + R.
