@@ -1,16 +1,16 @@
 {
   "ano": 2026,
-  "atualizadoEm": "2026-11-19T15:35:46-03:00",
+  "atualizadoEm": "2026-11-23T11:05:09-03:00",
   "fonte": "Gestao_demandas_V2.xlsx",
   "resumo": {
     "total": 67,
     "porStatus": {
       "Produção": 43,
-      "Backlog": 12,
+      "Backlog": 11,
       "Cancelada": 4,
-      "Aguardando Go Live": 3,
-      "Homologação": 3,
-      "Desenvolvimento": 2
+      "Aguardando Go Live": 2,
+      "Homologação": 4,
+      "Desenvolvimento": 3
     }
   },
   "registros": [
@@ -916,9 +916,9 @@
       "recDet": "2026-08-31T00:00:00",
       "primeiraHom": "2026-09-03T00:00:00",
       "homFinal": "2026-11-18T00:00:00",
-      "goLive": "",
+      "goLive": "2026-12-01T00:00:00",
       "tmaHom": 3.0,
-      "tmaTotal": null,
+      "tmaTotal": 313.0,
       "classificacao": "Atualização de regra",
       "necessidadeEntradaProducao": "2027-02-01T00:00:00",
       "dataCancelamento": "",
@@ -972,7 +972,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "04/11 - Validação NOK\n18/11- Homologação não tinha acesso aos objetos, sustentação informa que não foi atribuido os objetos, precisa liberar o perfil para finalizar a homologação."
+      "observacao": "04/11 - Validação NOK 18/11- Homologação não tinha acesso aos objetos, sustentação informa que não foi atribuido os objetos, precisa liberar o perfil para finalizar a homologação."
     },
     {
       "ritm": "RITM0925870",
@@ -1079,7 +1079,7 @@
       "solicitante": "Gabriela Pecora",
       "descricao": "Ajuste de informações no BMS para colaboradores assuntados",
       "prioridade": "1",
-      "statusOriginal": "5 - Homologação",
+      "statusOriginal": "6 - Em ajustes",
       "statusAjustado": "Homologação",
       "recDet": "2026-11-05T00:00:00",
       "primeiraHom": "",
@@ -1092,7 +1092,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "16/11 - solicitado informações para Sustentação, questionamentos da Gabriela na validação do DET.\nVinculada a RITM0961877"
+      "observacao": "16/11 - solicitado informações para Sustentação, questionamentos da Gabriela na validação do DET. Vinculada a RITM0961877"
     },
     {
       "ritm": "RITM0943718",
@@ -1140,7 +1140,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "Vinculado ao RITM1002243\nSolicitada à equipe de Folha a análise dos impactos do atraso desta entrega devido às prioridades de L&O. Deise informou prazo para janeiro/2027, e foi solicitado validar se a implementação deve ocorrer antes do fechamento da folha ou se pode ser realizada posteriormente, detalhando os impactos em caso de atraso.Resp.: Deise(Folha) - 10/11"
+      "observacao": "Vinculado ao RITM1002243 Solicitada à equipe de Folha a análise dos impactos do atraso desta entrega devido às prioridades de L&O. Deise informou prazo para janeiro/2027, e foi solicitado validar se a implementação deve ocorrer antes do fechamento da folha ou se pode ser realizada posteriormente, detalhando os impactos em caso de atraso.Resp.: Deise(Folha) - 10/11"
     },
     {
       "ritm": "RITM0970029",
@@ -1380,7 +1380,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "Vinculado ao RITM0943736\nSolicitada à equipe de Folha a análise dos impactos do atraso desta entrega devido às prioridades de L&O. Deise informou prazo para janeiro/2027, e foi solicitado validar se a implementação deve ocorrer antes do fechamento da folha ou se pode ser realizada posteriormente, detalhando os impactos em caso de atraso.Resp.: Deise(Folha) - 10/11"
+      "observacao": "Vinculado ao RITM0943736 Solicitada à equipe de Folha a análise dos impactos do atraso desta entrega devido às prioridades de L&O. Deise informou prazo para janeiro/2027, e foi solicitado validar se a implementação deve ocorrer antes do fechamento da folha ou se pode ser realizada posteriormente, detalhando os impactos em caso de atraso.Resp.: Deise(Folha) - 10/11"
     },
     {
       "ritm": "RITM1006494",
@@ -1476,7 +1476,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "Vinculada a RITM0963354(Concluída)\nNecessário aguardar o sistema do governo voltar a comunicação"
+      "observacao": "Vinculada a RITM0963354(Concluída) Necessário aguardar o sistema do governo voltar a comunicação"
     },
     {
       "ritm": "RITM0992450",
@@ -1511,11 +1511,11 @@
       "solicitante": "Ana Maria Venancio Moreira De Franca",
       "descricao": "Ajustes da Parametrização de PHT para Escalas 5x2 e Criação de novos PHTs para a escala 5x2 (42 horas).",
       "prioridade": "0",
-      "statusOriginal": "7 - Aguardando subida",
-      "statusAjustado": "Aguardando Go Live",
+      "statusOriginal": "5 - Homologação",
+      "statusAjustado": "Homologação",
       "recDet": "2026-11-16T00:00:00",
       "primeiraHom": "2026-11-18T00:00:00",
-      "homFinal": "2026-11-18T00:00:00",
+      "homFinal": "",
       "goLive": "",
       "tmaHom": 2.0,
       "tmaTotal": null,
@@ -1524,7 +1524,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "18/11 - Sthepan (email) - alteração do percentual de horas extras de 100% para 50% na segunda folga da semana em todos os segmentos - Em alinhamento entre Ana Folha e Sustentação\n18/11 - A RITM1022675 foi criada para contemplar os PHTs das escalas 12x36 e 5x2 (42h).\nSem alinhamento prévio, a frente de 5x2 (42h) foi incorporada à RITM1019832, que foi homologada com sucesso(aguardamos apenas a definição da necessidade de negócio referente à alteração da valorização das horas extras na segunda folga semanal, de 100% para 50%)"
+      "observacao": "23/11 - Det já se encontra com Ana (Folha) para validação. 19/11 - Formalizado os ajustes necessários, novo DET para 24/11. 18/11 - Sthepan (email) - alteração do percentual de horas extras de 100% para 50% na segunda folga da semana em todos os segmentos - Em alinhamento entre Ana Folha e Sustentação 18/11 - A RITM1022675 foi criada para contemplar os PHTs das escalas 12x36 e 5x2 (42h). Sem alinhamento prévio, a frente de 5x2 (42h) foi incorporada à RITM1019832, que foi homologada com sucesso(aguardamos apenas a definição da necessidade de negócio referente à alteração da valorização das horas extras na segunda folga semanal, de 100% para 50%)"
     },
     {
       "ritm": "RITM1022675",
@@ -1548,7 +1548,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "18/11 - Sthepan (email) - alteração do percentual de horas extras de 100% para 50% na segunda folga da semana em todos os segmentos - Em alinhamento entre Ana Folha e Sustentação\n18/11 - A RITM1022675 foi criada para contemplar os PHTs das escalas 12x36 e 5x2 (42h).\nSem alinhamento prévio, a frente de 5x2 (42h) foi incorporada à RITM1019832, que foi homologada com sucesso(aguardamos apenas a definição da necessidade de negócio referente à alteração da valorização das horas extras na segunda folga semanal, de 100% para 50%)"
+      "observacao": "23/11 - Aguardando validação da RITM referente a escala 5x2 para liberação do objeto e inicio desse desenvolvimento do PHT 12x36 18/11 - Sthepan (email) - alteração do percentual de horas extras de 100% para 50% na segunda folga da semana em todos os segmentos - Em alinhamento entre Ana Folha e Sustentação 18/11 - A RITM1022675 foi criada para contemplar os PHTs das escalas 12x36 e 5x2 (42h). Sem alinhamento prévio, a frente de 5x2 (42h) foi incorporada à RITM1019832, que foi homologada com sucesso(aguardamos apenas a definição da necessidade de negócio referente à alteração da valorização das horas extras na segunda folga semanal, de 100% para 50%)"
     },
     {
       "ritm": "RITM1024342",
@@ -1572,7 +1572,7 @@
       "dataCancelamento": "",
       "motivoCancelamento": "",
       "solicitanteCancelamento": "",
-      "observacao": "19/11 - Camila de Avila informa que terá uma janela de admissão em 18/12. O ideal é que suba antes do dia 15/12, para que RPA consiga já emitir os kits admissionais com a nova versão.\n18/11 - Sthepan (email) - alteração do percentual de horas extras de 100% para 50% na segunda folga da semana em todos os segmentos - Em alinhamento entre Ana Folha e Sustentação"
+      "observacao": "19/11 - Camila de Avila informa que terá uma janela de admissão em 18/12. O ideal é que suba antes do dia 15/12, para que RPA consiga já emitir os kits admissionais com a nova versão. 18/11 - Sthepan (email) - alteração do percentual de horas extras de 100% para 50% na segunda folga da semana em todos os segmentos - Em alinhamento entre Ana Folha e Sustentação"
     },
     {
       "ritm": "RITM1031620",
@@ -1605,10 +1605,10 @@
       "area": "Folha",
       "usuarioSolicitante": "Jandira Da Silva Costa",
       "solicitante": "Jandira Da Silva Costa",
-      "descricao": "Atualização SINTTEL - SC",
+      "descricao": "Atualização SINTETEL - SC",
       "prioridade": "1",
-      "statusOriginal": "1 - Orçamentação",
-      "statusAjustado": "Backlog",
+      "statusOriginal": "3 - Aguardando data DET",
+      "statusAjustado": "Desenvolvimento",
       "recDet": "",
       "primeiraHom": "",
       "homFinal": "",
